@@ -1,9 +1,4 @@
 
-require('./market/huobi');
+const run = require('./market/huobi').run;
 
-function check() {
-    console.log('============ Check =============');
-    setTimeout(check, 100);
-}
-
-setTimeout(check, 3000);
+setTimeout(run, 60000);

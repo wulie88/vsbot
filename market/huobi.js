@@ -28,7 +28,17 @@ function handle(coin, t, asks, bids, currency) {
     console.log(symbol, ':', orderbook[symbol]);
     // TODO 根据数据生成你想要的K线 or whatever...
     // TODO 记录数据到你的数据库或者Redis
-    insert({symbol: symbol, ts: t, asks: a, bids: b})
+    insert(symbol, {symbol: symbol, ts: t, asks: a, bids: b})
+}
+
+function handle_k5min(coin, currency, ts, ch, data) {
+    let symbol = (coin + currency).toLowerCase();
+    data.map((item) => {
+        did = item['id']
+        delete item['id']
+        Object.assign(item, {symbol: symbol, ts: ts, did: did})
+        insert(symbol+'_k5min', item)
+    })
 }
 
 function get_depth(coin, currency) {
@@ -53,6 +63,32 @@ function get_depth(coin, currency) {
     });
 }
 
+function get_k5min(coin, currency) {
+    return new Promise(resolve => {
+        let url = `${BASE_URL}/market/history/kline?symbol=${coin}${currency}&period=5min&size=50`;
+        http.get(url, {
+            timeout: 5000,
+            gzip: true
+        }).then(data => {
+            let json = JSON.parse(data);
+            let st = json.status;
+            if (st === 'ok') {
+                let ts = json.ts;
+                let ch = json.ch;
+                let data = json.data;
+
+                handle_k5min(coin, currency, ts, ch, data);
+                resolve(null);
+            } else {
+                resolve(null);
+            }
+        }).catch(ex => {
+            console.log(coin, currency, ex);
+            resolve(null);
+        });
+    });
+}
+
 function run() {
     // console.log(`run ${moment()}`);
     // let list_btc = ['ltc-btc', 'eth-btc', 'etc-btc', 'bcc-btc', 'dash-btc', 'omg-btc', 'eos-btc', 'xrp-btc', 'zec-btc', 'qtum-btc'];
@@ -63,10 +99,10 @@ function run() {
     Promise.map(list, item => {
         let coin = item.split('-')[0];
         let currency = item.split('-')[1];
-        return get_depth(coin, currency);
+        return get_k5min(coin, currency);
     }).then(() => {
-        setTimeout(run, 100);
+        setTimeout(run, 1000*60);
     });
 }
 
-run();
+exports.run = run
