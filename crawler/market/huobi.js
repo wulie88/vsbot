@@ -1,5 +1,5 @@
 const http = require('../lib/httpClient');
-const insert = require('../lib/storage').insert;
+const Storage = require('../lib/storage');
 const Promise = require('bluebird');
 
 const BASE_URL = 'https://api.huobipro.com';
@@ -20,7 +20,7 @@ function handle(coin, t, asks, bids, currency) {
     let a = asks.sort(cmp_ask);
     let b = bids.sort(cmp_bid);
 
-    let symbol = (coin + currency).toLowerCase();
+    let symbol = (coin + '2' +currency).toLowerCase();
     orderbook[symbol] = {
         asks: a,
         bids: b
@@ -28,16 +28,18 @@ function handle(coin, t, asks, bids, currency) {
     console.log(symbol, ':', orderbook[symbol]);
     // TODO 根据数据生成你想要的K线 or whatever...
     // TODO 记录数据到你的数据库或者Redis
-    insert(symbol, {symbol: symbol, ts: t, asks: a, bids: b})
+    Storage.insert(symbol, {symbol: symbol, ts: t, asks: a, bids: b})
 }
 
 function handle_k5min(coin, currency, ts, ch, data) {
-    let symbol = (coin + currency).toLowerCase();
+    let symbol = (coin + '2' + currency).toLowerCase();
     data.map((item) => {
         did = item['id']
         delete item['id']
         Object.assign(item, {symbol: symbol, ts: ts, did: did})
-        insert(symbol+'_k5min', item)
+        let col = symbol+'_k5min'
+        Storage.ensureIndex(col, {did:-1}, {unique: true})
+        Storage.insert(col, item)
     })
 }
 
@@ -92,7 +94,7 @@ function get_k5min(coin, currency) {
 function run() {
     // console.log(`run ${moment()}`);
     // let list_btc = ['ltc-btc', 'eth-btc', 'etc-btc', 'bcc-btc', 'dash-btc', 'omg-btc', 'eos-btc', 'xrp-btc', 'zec-btc', 'qtum-btc'];
-    let list_usdt = ['btc-usdt', 'ltc-usdt', 'eth-usdt', 'etc-usdt', 'bcc-usdt', 'dash-usdt', 'xrp-usdt', 'eos-usdt', 'omg-usdt', 'zec-usdt', 'qtum-usdt'];
+    let list_usdt = ['btc-usdt', 'ltc-usdt', 'eth-usdt', 'etc-usdt', 'dash-usdt', 'xrp-usdt', 'eos-usdt', 'omg-usdt', 'zec-usdt', 'qtum-usdt'];
     // let list_eth = ['omg-eth', 'eos-eth', 'qtum-eth'];
     // let list = list_btc.concat(list_usdt).concat(list_eth);
     let list = list_usdt;

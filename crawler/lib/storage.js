@@ -12,14 +12,36 @@ MongoClient.connect(url, function(err, client) {
   console.log('connected:', url)
 });
 
-exports.insert = function (collection, row) {
-  if (!dbClient)
-    return;
-
+const getCollection = exports.getCollection = function(collection) {
   let col = dbCollections[collection];
   if (!col) {
     col = dbCollections[collection] = dbClient.db(dbName).collection(collection);
   }
+
+  return col;
+}
+
+exports.ensureIndex = function(collection, index, options) {
+  if (!dbClient)
+    return;
+
+  let col = getCollection(collection);
+  new Promise(function(resolve, reject) {
+    col.ensureIndex(index, options, function(err, result) {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(result)
+      }
+    })
+  }).catch(() => {})
+}
+
+exports.insert = function (collection, row) {
+  if (!dbClient)
+    return;
+
+  let col = getCollection(collection);
 
   new Promise(function(resolve, reject) {
     col.insert(row, function(err, result) {
