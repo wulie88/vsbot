@@ -13,18 +13,20 @@ app.use(koaLogger());
 
 app.use(async (ctx, next) => {
   ctx.state = Object.assign({}, ctx.state, {
-    assetsPath,
     csrf: ctx.csrf,
     isMobile: false,
     env: process.env.NODE_ENV,
     footer: {
-      about: ctx.__('dashboard.about'),
-      feedback: ctx.__('dashboard.feedback'),
-      code: ctx.__('dashboard.code'),
+      about: ('dashboard.about'),
+      feedback: ('dashboard.feedback'),
+      code: ('dashboard.code'),
     },
   });
   await next();
 });
+
+const router = require('./routes')
+app.use(router.routes());
 
 // 静态文件serve在koa-router的其他规则之上 
 app.use(koaStatic(path.resolve('dist'))); // 将webpack打包好的项目目录作为Koa静态文件服务的目录

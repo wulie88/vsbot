@@ -6,12 +6,13 @@
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "app": "node app.js",
+    "dev-app": "nodemon app.js",
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "config": "^1.29.1",
     "iview": "^2.8.0",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
@@ -19,6 +20,8 @@
     "koa-logger": "^3.1.0",
     "koa-router": "^7.3.0",
     "koa-static": "^4.0.2",
+    "log4js": "^2.4.1",
+    "mongoose": "^4.13.9",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },

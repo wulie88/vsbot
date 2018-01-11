@@ -36,8 +36,8 @@ function handle_k5min(coin, currency, ts, ch, data) {
     data.map((item) => {
         did = item['id']
         delete item['id']
-        Object.assign(item, {symbol: symbol, ts: ts, did: did})
-        let col = symbol+'_k5min'
+        Object.assign(item, {symbol: symbol, ts: ts, did: did, createAt: (new Date()).getTime()})
+        let col = symbol+'_k5mins'
         Storage.ensureIndex(col, {did:-1}, {unique: true})
         Storage.insert(col, item)
     })

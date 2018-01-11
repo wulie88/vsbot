@@ -1,0 +1,28 @@
+{
+  "production": false,
+  "port": "4000",
+  "appKey": "hacknical-key",
+  "appName": "hacknical",
+  "redis": "redis://localhost:6379/3",
+  "database": {
+    "url": "mongodb://localhost:27017/vsbot"
+  },
+  "links": {
+    "github": "https://github.com/ecmadao/hacknical",
+    "issue": "https://github.com/ecmadao/hacknical/issues",
+    "homePage": "https://github.com/ecmadao/hacknical"
+  },
+  "qiniu": {
+    "BucketName": "",
+    "AccessKey": "",
+    "SecretKey": ""
+  },
+  "services": {
+    "api": {
+      "url": "",
+      "timeouts": []
+    },
+    "slack": null
+  },
+  "cdn": ""
+}
