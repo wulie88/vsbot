@@ -22,6 +22,8 @@ app.use(async (ctx, next) => {
       code: ('dashboard.code'),
     },
   });
+  ctx.set('Cache-Control', 'no-cache');
+  ctx.set('Access-Control-Allow-Origin', '*');
   await next();
 });
 

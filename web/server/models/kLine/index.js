@@ -12,7 +12,7 @@ let getModel = (col) => {
 
 const findAll = async (col) => {
   let model = getModel(col);
-  return await model.find({});
+  return await model.find({}).limit(100).sort({did:-1});
 }
 
 module.exports = {
