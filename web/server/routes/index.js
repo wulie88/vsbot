@@ -21,8 +21,8 @@ router.get(
 );
 router.get('/404', Home.handle404);
 router.get(
-  '/dashboard',
-  Home.dashboard
+  '/kline',
+  Home.kline
 );
 
 

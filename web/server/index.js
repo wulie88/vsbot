@@ -31,7 +31,7 @@ const router = require('./routes')
 app.use(router.routes());
 
 // 静态文件serve在koa-router的其他规则之上 
-app.use(koaStatic(path.resolve('dist'))); // 将webpack打包好的项目目录作为Koa静态文件服务的目录
+app.use(koaStatic(path.resolve('wwwroot'))); // 将webpack打包好的项目目录作为Koa静态文件服务的目录
 
 app.on('error', function(err, ctx){
   console.log('server error', err);

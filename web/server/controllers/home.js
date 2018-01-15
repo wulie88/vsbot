@@ -2,7 +2,7 @@
 const KLine = require('../models/kLine')
 
 const index = async (ctx) => {
-  ctx.redirect('/dashboard');
+  ctx.redirect('/index.html');
 };
 
 const handle404 = async (ctx) => {
@@ -13,13 +13,14 @@ const handle404 = async (ctx) => {
   });
 };
 
-const dashboard = async (ctx) => {
-  const datas = await KLine.findAll('btc2usdt_k5min');
+const kline = async (ctx) => {
+  const query = ctx.request.query
+  const datas = await KLine.findAll(query.symbol+'_k5min');
   ctx.body = datas
 };
 
 module.exports = {
   index,
   handle404,
-  dashboard
+  kline
 };
