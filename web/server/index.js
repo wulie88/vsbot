@@ -37,8 +37,8 @@ app.on('error', function(err, ctx){
   console.log('server error', err);
 });
 
-app.listen(8889, () => {
-  console.log('Koa is listening in 8889');
+app.listen(80, () => {
+  console.log('Koa is listening in 80');
 });
 
 module.exports = app;
